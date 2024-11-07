@@ -1,4 +1,5 @@
 # moviesList
+
 A3 - Sitemas distriuídos e Mobile
 
 Full stack aplicação para gerenciar listas de filmes.
@@ -17,3 +18,15 @@ docker run -d \
     -p 3306:3306 \
     mysql:latest
 ```
+
+## REACT
+
+```
+npm install
+```
+
+```
+npm run dev
+```
+
+OBS: rodar sempre no diretório do frontend (spa)
