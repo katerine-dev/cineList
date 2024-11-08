@@ -1,21 +1,18 @@
-function Movies({ movie, onMovieClick, onMoviesTaskClick }) {
+import { ChevronRightIcon, TrashIcon } from "lucide-react";
+
+function Movies(props) {
   return (
-    <ul className=" space-y-4 p-6 border-amber-500 rounded-md">
-      {tasks.map((movie) => (
+    <ul className="space-y-4 bg-amber-500 p-6 rounded-md">
+      {props.movies.map((movie) => (
         <li key={movie.id} className="flex gap-2">
-          <button
-            onClick={() => onMovieClick(movie.id)}
-            className={`bg-white text-left w-full flex items-center gap-2 text-black p-2 rounded-md ${
-              movie.isCompleted && "line-through"
-            }`}
-          >
+          <button className=" w-full text-left text-black bg-white p-2 rounded-md ">
+            {" "}
             {movie.title}
           </button>
-
-          <button
-            onClick={() => onDeleteMovieClick(movie.id)}
-            className="bg-slate-400 text-white p-2 rounded-md"
-          >
+          <button className="text-black bg-white p-2 rounded-md ">
+            <ChevronRightIcon />
+          </button>
+          <button className="text-black bg-white p-2 rounded-md ">
             <TrashIcon />
           </button>
         </li>
@@ -23,4 +20,5 @@ function Movies({ movie, onMovieClick, onMoviesTaskClick }) {
     </ul>
   );
 }
+
 export default Movies;
