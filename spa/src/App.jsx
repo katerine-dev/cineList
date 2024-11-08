@@ -38,6 +38,7 @@ function App() {
           <Movies movies={movies} />
           <MoviesSeen />
         </div>
+        <h1>SOBRE NÓS</h1>
       </div>
     </div>
   );
