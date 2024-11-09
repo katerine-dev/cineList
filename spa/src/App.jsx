@@ -17,21 +17,9 @@ function App() {
   }, []);
 
   const [movies, setMovies] = useState([
-    {
-      id: 1,
-      title: "filme 1",
-      inSeen: false,
-    },
-    {
-      id: 2,
-      title: "filme 2",
-      inSeen: false,
-    },
-    {
-      id: 3,
-      title: "filme 3",
-      inSeen: false,
-    },
+    { id: 1, title: "filme 1", inSeen: false },
+    { id: 2, title: "filme 2", inSeen: false },
+    { id: 3, title: "filme 3", inSeen: false },
   ]);
 
   const [moviesSeen, setMoviesSeen] = useState([]);
@@ -57,16 +45,19 @@ function App() {
   }
 
   function onAddMovieSubmit(title) {
-    const newMovie = {
-      id: v4(),
-      title,
-      inSeen: false,
-    };
+    const newMovie = { id: v4(), title, inSeen: false };
     setMovies([...movies, newMovie]);
   }
 
+  function onClearAllMovies() {
+    setMovies([]);
+  }
+  function onClearAllMoviesSeen() {
+    setMoviesSeen([]);
+  }
+
   return (
-    <div className=" w-screen h-screen flex flex-col">
+    <div className="w-screen h-screen flex flex-col">
       <NavBar className="fixed top-0 left-0 w-full bg-black p-4 shadow-lg z-50" />
 
       <div className="w-screen h-full bg-black flex justify-center p-6">
@@ -92,12 +83,14 @@ function App() {
                 movies={movies}
                 onMovieClick={onMovieClick}
                 onDeleteMovieClick={onDeleteMovieClick}
+                onClearAllMovies={onClearAllMovies}
               />
             </div>
             <div className="flex-1">
               <MoviesSeen
                 moviesSeen={moviesSeen}
                 onDeleteMovieSeenClick={onDeleteMovieSeenClick}
+                onClearAllMoviesSeen={onClearAllMoviesSeen}
               />
             </div>
           </div>

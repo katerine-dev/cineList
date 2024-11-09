@@ -1,6 +1,11 @@
 import { CheckIcon, TrashIcon } from "lucide-react";
 
-function Movies({ movies, onMovieClick, onDeleteMovieClick }) {
+function Movies({
+  movies,
+  onMovieClick,
+  onDeleteMovieClick,
+  onClearAllMovies,
+}) {
   return (
     <div className="border border-amber-500 rounded-md p-4">
       <h1 className="text-white text-xs text-left mb-2">PARA ASSISTIR</h1>
@@ -25,6 +30,12 @@ function Movies({ movies, onMovieClick, onDeleteMovieClick }) {
           </li>
         ))}
       </ul>
+      <button
+        onClick={onClearAllMovies}
+        className="hover:text-black text-xs text-amber-500 py-2 px-6"
+      >
+        Limpar Tudo
+      </button>
     </div>
   );
 }

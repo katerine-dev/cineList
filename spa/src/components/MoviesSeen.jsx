@@ -1,6 +1,10 @@
 import { ChevronDownIcon, TrashIcon } from "lucide-react";
 
-function MoviesSeen({ moviesSeen, onDeleteMovieSeenClick }) {
+function MoviesSeen({
+  moviesSeen,
+  onDeleteMovieSeenClick,
+  onClearAllMoviesSeen,
+}) {
   return (
     <div className="border border-amber-500 rounded-md p-4">
       <h1 className="text-white text-xs text-left mb-2">ASSISTIDOS</h1>
@@ -22,6 +26,12 @@ function MoviesSeen({ moviesSeen, onDeleteMovieSeenClick }) {
           </li>
         ))}
       </ul>
+      <button
+        onClick={onClearAllMoviesSeen}
+        className="hover:text-black text-xs text-amber-500 py-2 px-6"
+      >
+        Limpar Tudo
+      </button>
     </div>
   );
 }
