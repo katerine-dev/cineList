@@ -57,7 +57,8 @@ function App() {
   return (
     <div className="w-screen h-screen bg-black flex justify-center p-6">
       <div className="w-[800px]">
-        <h1 className="text-3xl font-bold text-center text-white">CINELIST</h1>
+        <img src="./static/CINELIST.jpg" alt="CINELIST" />
+
         <p className="text-center text-white p-11">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
           ducimus corrupti sint, magni iste error nihil ipsum nobis aperiam ea
