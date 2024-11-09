@@ -1,26 +1,25 @@
-import { ChevronRightIcon, TrashIcon } from "lucide-react";
+import { CheckIcon, TrashIcon } from "lucide-react";
 
-function Movies(props) {
+function Movies({ movies, onMovieClick, onDeleteMovieClick }) {
   return (
-    <div className=" border border-amber-500 rounded-md p-4">
+    <div className="border border-amber-500 rounded-md p-4">
       <h1 className="text-white text-xs text-left mb-2">PARA ASSISTIR</h1>
-      <ul
-        className="space-y-4 bg-amber-500 p-2
-       rounded-md"
-      >
-        {props.movies.map((movie) => (
+      <ul className="space-y-4 bg-amber-500 p-2 rounded-md">
+        {movies.map((movie) => (
           <li key={movie.id} className="flex gap-2">
-            <button className=" w-full text-left text-black bg-white p-2 rounded-md ">
+            <button className="w-full text-left flex text-black bg-white p-2 rounded-md">
               {movie.title}
             </button>
             <button
-              onClick={() => props.onMovieClick(movie.id)}
-              className="text-black bg-white p-2 rounded-md "
+              onClick={() => onMovieClick(movie.id)}
+              className="text-black bg-white p-2 rounded-md"
             >
-              {movie.isSeen ? "SEEN" : "NOT SEEN"}
-              <ChevronRightIcon />
+              <CheckIcon />
             </button>
-            <button className="text-black bg-white p-2 rounded-md ">
+            <button
+              onClick={() => onDeleteMovieClick(movie.id)}
+              className="text-black bg-white p-2 rounded-md"
+            >
               <TrashIcon />
             </button>
           </li>
