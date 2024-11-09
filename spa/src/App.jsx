@@ -2,6 +2,7 @@ import { useState } from "react";
 import AddMovie from "./components/addMovie";
 import Movies from "./components/Movies";
 import MoviesSeen from "./components/MoviesSeen";
+import { v4 } from "uuid";
 
 function App() {
   const [movies, setMovies] = useState([
@@ -44,6 +45,15 @@ function App() {
     setMoviesSeen(newMoviesSeen);
   }
 
+  function onAddMovieSubmit(title) {
+    const newMovie = {
+      id: v4(),
+      title,
+      inSeen: false,
+    };
+    setMovies([...movies, newMovie]);
+  }
+
   return (
     <div className="w-screen h-screen bg-black flex justify-center p-6">
       <div className="w-[800px]">
@@ -54,8 +64,8 @@ function App() {
           laudantium facilis quisquam voluptatibus ratione? Voluptatibus illum
           perferendis officiis facere.
         </p>
-        <AddMovie />
-        <div className="">
+        <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
+        <div className=" ">
           <Movies
             movies={movies}
             onMovieClick={onMovieClick}
@@ -66,8 +76,8 @@ function App() {
             onDeleteMovieSeenClick={onDeleteMovieSeenClick}
           />
         </div>
-        <h1 className="text-white">SOBRE NÓS</h1>
-        <div>
+        <h1 className="text-white mt-6">SOBRE NÓS</h1>
+        <div className="flex space-x-4 mt-4">
           <img src="" alt="Avatar" class="w-16 h-16 rounded-full"></img>
 
           <img src="" alt="Avatar" class="w-16 h-16 rounded-full"></img>
