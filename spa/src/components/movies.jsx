@@ -11,10 +11,13 @@ function Movies(props) {
         {props.movies.map((movie) => (
           <li key={movie.id} className="flex gap-2">
             <button className=" w-full text-left text-black bg-white p-2 rounded-md ">
-              {" "}
               {movie.title}
             </button>
-            <button className="text-black bg-white p-2 rounded-md ">
+            <button
+              onClick={() => props.onMovieClick(movie.id)}
+              className="text-black bg-white p-2 rounded-md "
+            >
+              {movie.isSeen ? "SEEN" : "NOT SEEN"}
               <ChevronRightIcon />
             </button>
             <button className="text-black bg-white p-2 rounded-md ">

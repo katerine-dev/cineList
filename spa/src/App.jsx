@@ -22,6 +22,16 @@ function App() {
     },
   ]);
 
+  function onMovieClick(movieId) {
+    const newMovies = movies.map((movie) => {
+      if (movie.id == movieId) {
+        return { ...movie, isSeen: !movie.isSeen };
+      }
+      return movie;
+    });
+    setMovies(newMovies);
+  }
+
   return (
     <div className="w-screen h-screen bg-black flex justify-center p-6">
       <div className="w-[500px]">
@@ -35,7 +45,7 @@ function App() {
         </p>
         <AddMovie />
         <div>
-          <Movies movies={movies} />
+          <Movies movies={movies} onMovieClick={onMovieClick} />
           <MoviesSeen />
         </div>
         <h1>SOBRE NÓS</h1>
