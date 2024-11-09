@@ -3,8 +3,16 @@ import AddMovie from "./components/addMovie";
 import Movies from "./components/Movies";
 import MoviesSeen from "./components/MoviesSeen";
 import { v4 } from "uuid";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    document.body.classList.add("bg-black", "text-white");
+    return () => {
+      document.body.classList.remove("bg-black", "text-white");
+    };
+  }, []);
+
   const [movies, setMovies] = useState([
     {
       id: 1,
@@ -57,7 +65,11 @@ function App() {
   return (
     <div className="w-screen h-screen bg-black flex justify-center p-6">
       <div className="w-[800px]">
-        <img src="./static/CINELIST.jpg" alt="CINELIST" />
+        <img
+          src="./static/CINELIST.jpg"
+          alt="CINELIST LOGO"
+          className="w-full"
+        />
 
         <p className="text-center text-white p-11">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
@@ -66,22 +78,39 @@ function App() {
           perferendis officiis facere.
         </p>
         <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
-        <div className=" ">
-          <Movies
-            movies={movies}
-            onMovieClick={onMovieClick}
-            onDeleteMovieClick={onDeleteMovieClick}
-          />
-          <MoviesSeen
-            moviesSeen={moviesSeen}
-            onDeleteMovieSeenClick={onDeleteMovieSeenClick}
-          />
+        <div className=" flex gap-4 mt-6">
+          <div className="flex-1">
+            <Movies
+              movies={movies}
+              onMovieClick={onMovieClick}
+              onDeleteMovieClick={onDeleteMovieClick}
+            />
+          </div>
+          <div className="flex-1">
+            <MoviesSeen
+              moviesSeen={moviesSeen}
+              onDeleteMovieSeenClick={onDeleteMovieSeenClick}
+            />
+          </div>
         </div>
         <h1 className="text-white mt-6">SOBRE NÓS</h1>
-        <div className="flex space-x-4 mt-4">
-          <img src="" alt="Avatar" class="w-16 h-16 rounded-full"></img>
-
-          <img src="" alt="Avatar" class="w-16 h-16 rounded-full"></img>
+        <div className="flex mt-4">
+          <div className="flex items-center space-x-2 w-1/2">
+            <img
+              src="./static/sapiens-avatar.png"
+              alt="Avatar Katerine"
+              className="w-32 h-32 rounded-full"
+            />
+            <h2 className="text-lg font-medium">Katerine W</h2>
+          </div>
+          <div className="flex items-center space-x-2 w-1/2">
+            <img
+              src="./static/sapiens-avatar-2.png"
+              alt="Avatar Nathalie"
+              className="w-32 h-32 rounded-full"
+            />
+            <h2 className="text-lg font-medium">Nathalie T</h2>
+          </div>
         </div>
       </div>
     </div>
