@@ -116,6 +116,11 @@ function App() {
               <Nathalie />
             </div>
           </div>
+          <div className="w-full">
+            <footer className="flex justify-center items-center text-center text-xs text-white mt-16 p-4">
+              <p>Desenvolvido por Katerine Witkoski e Nathalie Taylor</p>
+            </footer>
+          </div>
         </div>
       </div>
     </div>
