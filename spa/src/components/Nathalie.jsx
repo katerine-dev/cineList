@@ -6,7 +6,7 @@ function Nathalie() {
     <nav>
       <ul>
         <li>
-          <h1 className="text-lg font-medium">Nathalie T</h1>
+          <h1 className="text-lg font-medium tracking-widest">Nathalie T</h1>
           <p className="text-xs mt-1 mb-2">
             Graduanda em Ciência da Computação - UAM
           </p>

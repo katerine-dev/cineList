@@ -8,8 +8,10 @@ function Movies({
 }) {
   return (
     <div className="border border-amber-500 rounded-md p-4">
-      <h1 className="text-white text-xs text-left mb-2">PARA ASSISTIR</h1>
-      <ul className="space-y-4 bg-amber-500 p-2 rounded-md">
+      <h1 className="text-white text-xs text-left mb-2 font-josefin-sans tracking-widest">
+        PARA ASSISTIR
+      </h1>
+      <ul className="space-y-4 bg-amber-500 p-2 rounded-md font-josefin-slab text-s">
         {movies.map((movie) => (
           <li key={movie.id} className="flex gap-2">
             <button className="w-full text-left flex text-black bg-white p-2 rounded-md">
@@ -32,7 +34,7 @@ function Movies({
       </ul>
       <button
         onClick={onClearAllMovies}
-        className="hover:text-black text-xs text-amber-500 py-2 px-6"
+        className="hover:text-black text-xs text-amber-500 py-2 px-6 font-josefin-sans"
       >
         Limpar Tudo
       </button>

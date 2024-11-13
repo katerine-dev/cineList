@@ -59,25 +59,28 @@ function App() {
   }
 
   return (
-    <div className="w-screen h-screen flex flex-col">
+    <div className="w-screen h-screen flex flex-col font-josefin-sans">
       <NavBar className="fixed top-0 left-0 w-full bg-black p-4 shadow-lg z-50" />
       <div className="w-screen h-full bg-black flex justify-center p-6">
         <div className="w-[800px]" id="home">
           <img
             src="./static/CINELIST.jpg"
             alt="CINELIST LOGO"
-            className="w-full"
+            className="w-full mt-10 mb-10"
           />
-          <p className="text-center text-white p-11">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
-            ducimus corrupti sint, magni iste error nihil ipsum nobis aperiam ea
-            laudantium facilis quisquam voluptatibus ratione? Voluptatibus illum
-            perferendis officiis facere.
+          <p className="text-center text-white p-8 mt-10 mb-10">
+            Com o CINELIST, você pode criar sua lista de de filmes perfeita! Em
+            um único lugar é possível adicionar, gerenciar e acompanhar seus
+            filmes favoritos de maneira simples e intuitiva. Organize sua lista
+            de filmes a assistir e confira as obras já vistas, adicionando
+            comentários e classificando-os conforme sua opinião. Torne sua
+            experiência cinematográfica mais divertida e prática – tudo ao
+            alcance de um clique!
           </p>
 
           <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
 
-          <div className="flex gap-4 mt-6" id="listas">
+          <div className="flex gap-4 mt-10 mb-10 " id="listas">
             <div className="flex-1">
               <Movies
                 movies={movies}
@@ -95,7 +98,10 @@ function App() {
             </div>
           </div>
 
-          <h1 className="text-white mt-20" id="sobreNos">
+          <h1
+            className="text-amber-500 mt-20 tracking-widest text-lg"
+            id="sobreNos "
+          >
             SOBRE NÓS
           </h1>
           <div className="flex mt-4">
@@ -116,8 +122,8 @@ function App() {
               <Nathalie />
             </div>
           </div>
-          <footer className="flex justify-center items-center text-center text-xs text-white mt-16 p-4">
-            <p>Desenvolvido por Katerine Witkoski e Nathalie Taylor</p>
+          <footer className="flex justify-center items-center text-center text-xs text-white mt-16 p-4 font-sans">
+            <p>Desenvolvido por Katerine Witkoski e Nathalie Taylor - 2024</p>
           </footer>
         </div>
       </div>

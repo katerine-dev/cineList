@@ -14,6 +14,13 @@ export default {
         "custom-pink-high": "#EE946C",
         "custom-orange": "#FB6C2B", // Essas cores são exemplos de personalização aqui você pode colocar a paleta que escolhemos.
       },
+      fontFamily: {
+        "josefin-sans": ["Josefin Sans", "sans-serif"],
+        "josefin-slab": ["Josefin Slab", "serif"],
+      },
+      letterSpacing: {
+        widest: "0.5em",
+      },
     },
   },
   plugins: [],

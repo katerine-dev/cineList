@@ -44,12 +44,14 @@ function MoviesSeen({
 
   return (
     <div className="border border-amber-500 rounded-md p-4">
-      <h1 className="text-white text-xs text-left mb-2">ASSISTIDOS</h1>
+      <h1 className="text-white text-xs text-left mb-2 font-josefin-sans tracking-widest">
+        ASSISTIDOS
+      </h1>
       <ul className="space-y-4 bg-amber-500 p-2 rounded-md">
         {moviesSeen.map((movie) => (
           <li key={movie.id} className="space-y-2">
             <div className="flex gap-2 items-center">
-              <button className="w-full text-left text-black bg-white p-2 rounded-md">
+              <button className="w-full text-left text-black bg-white p-2 rounded-md font-josefin-slab text-s">
                 {movie.title}
               </button>
               <button

@@ -6,7 +6,7 @@ function Katerine() {
     <nav>
       <ul>
         <li>
-          <h1 className="text-lg font-medium">Katerine W</h1>
+          <h1 className="text-lg font-medium tracking-widest">Katerine W</h1>
           <p className="text-xs mt-1 mb-2">
             Graduanda em Ciência da Computação - UAM
           </p>
@@ -15,7 +15,7 @@ function Katerine() {
               href="https://github.com/katerine-dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-amber-500"
+              className=" hover:text-amber-500 "
             >
               <Github />
             </a>

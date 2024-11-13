@@ -1,7 +1,5 @@
 import React from "react";
-import { House } from "lucide-react";
-import { Popcorn } from "lucide-react";
-import { Ellipsis } from "lucide-react";
+import { House, Popcorn, Ellipsis, CircleUser } from "lucide-react";
 
 function NavBar() {
   const onHouseClick = () => {
