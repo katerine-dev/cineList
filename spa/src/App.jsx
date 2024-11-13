@@ -77,10 +77,11 @@ function App() {
             experiência cinematográfica mais divertida e prática – tudo ao
             alcance de um clique!
           </p>
+          <div id="listas">
+            <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
+          </div>
 
-          <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
-
-          <div className="flex gap-4 mt-10 mb-10 " id="listas">
+          <div className="flex gap-4 mt-10 mb-10 ">
             <div className="flex-1">
               <Movies
                 movies={movies}
