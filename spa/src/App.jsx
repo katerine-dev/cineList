@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddMovie from "./components/addMovie";
 import Movies from "./components/Movies";
 import MoviesSeen from "./components/MoviesSeen";
 import NavBar from "./components/navBar";
-import { v4 } from "uuid";
-import { useEffect } from "react";
 import Katerine from "./components/Katerine";
 import Nathalie from "./components/Nathalie";
+import { v4 } from "uuid";
 
 function App() {
   useEffect(() => {
@@ -28,8 +27,10 @@ function App() {
     const newMovies = movies.filter((movie) => movie.id !== movieId);
     const movieToMove = movies.find((movie) => movie.id === movieId);
     if (movieToMove) {
-      movieToMove.inSeen = true;
-      setMoviesSeen([...moviesSeen, movieToMove]);
+      setMoviesSeen([
+        ...moviesSeen,
+        { ...movieToMove, comment: "", rating: 0 },
+      ]);
     }
     setMovies(newMovies);
   }
@@ -52,6 +53,7 @@ function App() {
   function onClearAllMovies() {
     setMovies([]);
   }
+
   function onClearAllMoviesSeen() {
     setMoviesSeen([]);
   }
@@ -59,7 +61,6 @@ function App() {
   return (
     <div className="w-screen h-screen flex flex-col">
       <NavBar className="fixed top-0 left-0 w-full bg-black p-4 shadow-lg z-50" />
-
       <div className="w-screen h-full bg-black flex justify-center p-6">
         <div className="w-[800px]" id="home">
           <img
@@ -67,7 +68,6 @@ function App() {
             alt="CINELIST LOGO"
             className="w-full"
           />
-
           <p className="text-center text-white p-11">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
             ducimus corrupti sint, magni iste error nihil ipsum nobis aperiam ea
@@ -95,7 +95,7 @@ function App() {
             </div>
           </div>
 
-          <h1 className="text-white mt-6" id="sobreNos">
+          <h1 className="text-white mt-20" id="sobreNos">
             SOBRE NÓS
           </h1>
           <div className="flex mt-4">
@@ -116,11 +116,9 @@ function App() {
               <Nathalie />
             </div>
           </div>
-          <div className="w-full">
-            <footer className="flex justify-center items-center text-center text-xs text-white mt-16 p-4">
-              <p>Desenvolvido por Katerine Witkoski e Nathalie Taylor</p>
-            </footer>
-          </div>
+          <footer className="flex justify-center items-center text-center text-xs text-white mt-16 p-4">
+            <p>Desenvolvido por Katerine Witkoski e Nathalie Taylor</p>
+          </footer>
         </div>
       </div>
     </div>
