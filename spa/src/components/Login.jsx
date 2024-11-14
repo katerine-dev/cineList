@@ -1,4 +1,3 @@
-// Login.jsx
 import { useState } from "react";
 
 function Login({ onLoginSubmit }) {
@@ -32,7 +31,7 @@ function Login({ onLoginSubmit }) {
           setEmail("");
           setSenha("");
         }}
-        className="border border-amber-500 text-amber-500 px-4 py-2 rounded-md font-medium"
+        className="border border-amber-500 text-amber-500 px-4 py-2 rounded-md font-medium w-1/4 self-center"
       >
         Entrar
       </button>
