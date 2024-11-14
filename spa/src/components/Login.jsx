@@ -6,7 +6,6 @@ function Login({ onLoginSubmit }) {
 
   return (
     <div className="space-y-4 p-6 bg-black rounded-md shadow flex flex-col">
-      <div></div>
       <input
         type="text"
         placeholder="email"
