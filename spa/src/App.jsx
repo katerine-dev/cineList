@@ -1,6 +1,6 @@
-// App.jsx
-import { useState, useEffect } from "react";
-import Login from "./components/Login";
+import { useEffect } from "react";
+import Login from "../src/components/Login";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   useEffect(() => {
@@ -10,9 +10,10 @@ function App() {
     };
   }, []);
 
-  // Defina a função onLoginSubmit no App
+  const navigate = useNavigate();
+
   const onLoginSubmit = (email) => {
-    console.log("Login com:", email); // Aqui você pode implementar a lógica de login
+    console.log("Login com:", email);
   };
 
   return (
@@ -24,7 +25,7 @@ function App() {
             alt="CINELIST LOGO"
             className="w-full mt-10 mb-10"
           />
-          {/* Passa onLoginSubmit como uma prop para o Login */}
+
           <Login onLoginSubmit={onLoginSubmit} />
 
           <footer className="flex justify-center items-center text-center text-xs text-white mt-16 p-4 font-sans">
