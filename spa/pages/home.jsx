@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddMovie from "../src/components/addMovie";
 import Movies from "../src/components/Movies";
 import MoviesSeen from "../src/components/MoviesSeen";
@@ -6,8 +6,19 @@ import NavBar from "../src/components/NavBar";
 import Katerine from "../src/components/Katerine";
 import Nathalie from "../src/components/Nathalie";
 import { v4 } from "uuid";
+import { useSearchParams } from "react-router-dom";
 
 function Home() {
+  useEffect(() => {
+    document.body.classList.add("bg-black", "text-white");
+    return () => {
+      document.body.classList.remove("bg-black", "text-white");
+    };
+  }, []);
+
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email");
+
   const [movies, setMovies] = useState([
     { id: 1, title: "filme 1", inSeen: false },
     { id: 2, title: "filme 2", inSeen: false },
@@ -61,6 +72,7 @@ function Home() {
             alt="CINELIST LOGO"
             className="w-full mt-10 mb-10"
           />
+          <p>{email}</p>
           <p className="text-center text-white p-8 mt-10 mb-10">
             Com o CINELIST, você pode criar sua lista de filmes perfeita! Em um
             único lugar é possível adicionar, gerenciar e acompanhar seus filmes
