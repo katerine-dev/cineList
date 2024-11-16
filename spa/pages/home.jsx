@@ -83,7 +83,11 @@ function Home() {
             alcance de um clique!
           </p>
           <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
-          <div className="flex gap-4 mt-10 mb-10" id="listas">
+          <div
+            className="flex
+           gap-4 mt-10 mb-10"
+            id="listas"
+          >
             <div className="flex-1">
               <Movies
                 movies={movies}
