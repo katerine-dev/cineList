@@ -73,7 +73,7 @@ function Home() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto mt-10 mb-10">
+          <div className="max-w-lg mx-auto mt-10 mb-10">
             <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
           </div>
 

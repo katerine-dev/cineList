@@ -79,19 +79,19 @@ function Login({ onLoginSubmit }) {
             Entrar
           </button>
 
-          <button
-            onClick={onRegisterButton}
-            className="w-full text-amber-500 px-4 py-2 rounded-md font-xs mt-4"
-            aria-label="Ir para a página de registro"
-          >
-            Ainda não sou cadastrada/o
-          </button>
+          <div className="flex gap-4 mt-4 justify-between">
+            <button
+              onClick={onRegisterButton}
+              className="text-sm text-amber-500 self-center"
+              aria-label="Ir para a página de registro"
+            >
+              Ainda não sou cadastrada/o
+            </button>
 
-          <div className="text-center mt-4">
             <button
               type="button"
               onClick={onForgotPassword}
-              className="text-sm text-amber-500"
+              className="text-sm text-amber-500 self-center"
             >
               Esqueci minha senha
             </button>
