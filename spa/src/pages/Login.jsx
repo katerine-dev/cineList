@@ -1,78 +1,92 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 function Login({ onLoginSubmit }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const navigate = useNavigate();
 
-  function handleLogin() {
+  // Função chamada quando o login for realizado
+  function handleLogin(event) {
+    event.preventDefault();
+
     if (!email.trim() || !senha.trim()) {
       return alert("Campos obrigatórios");
     }
+
+    // Chama a função onLoginSubmit passando o email
     onLoginSubmit(email);
-    navigate(`/home?email=${email}`);
+
+    // Limpa os campos após o login
     setEmail("");
     setSenha("");
+
+    // Navega para a página "home" após o login bem-sucedido
+    navigate(`/home?email=${email}`);
   }
 
+  // Função para redirecionar para a página de registro
   function onRegisterButton() {
-    navigate("/registro");
+    navigate("/registro"); // Navega para a página de registro
   }
 
   return (
-    <div
-      className="space-y-4 p-6 bg-black rounded-md shadow flex flex-col"
-      role="form"
-      aria-labelledby="login-form-title"
-    >
-      <h2 id="login-form-title" className="sr-only">
-        Formulário de Login
-      </h2>
-      <label htmlFor="email" className="sr-only">
-        Email
-      </label>
-      <input
-        id="email"
-        type="text"
-        placeholder="email"
-        className="flex-grow px-4 py-2 rounded-md text-black"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        aria-required="true"
-        aria-label="Digite seu email"
-      />
+    <div className="w-full bg-black flex justify-center items-center flex-grow py-10">
+      <div className="w-full max-w-md space-y-6 p-8">
+        {/* Formulário de Login */}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <label htmlFor="email" className="sr-only">
+            Email
+          </label>
+          <input
+            id="email"
+            type="text"
+            placeholder="Digite seu email"
+            className="w-full px-4 py-3 rounded-md text-black"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            aria-required="true"
+            aria-label="Digite seu email"
+          />
 
-      <label htmlFor="senha" className="sr-only">
-        Senha
-      </label>
-      <input
-        id="senha"
-        type="password"
-        placeholder="senha"
-        className="flex-grow px-4 py-2 rounded-md text-black"
-        value={senha}
-        onChange={(event) => setSenha(event.target.value)}
-        aria-required="true"
-        aria-label="Digite sua senha"
-      />
+          <label htmlFor="senha" className="sr-only">
+            Senha
+          </label>
+          <input
+            id="senha"
+            type="password"
+            placeholder="Digite sua senha"
+            className="w-full px-4 py-3 rounded-md text-black"
+            value={senha}
+            onChange={(event) => setSenha(event.target.value)}
+            aria-required="true"
+            aria-label="Digite sua senha"
+          />
 
-      <button
-        onClick={handleLogin}
-        className="border border-amber-500 text-amber-500 px-4 py-2 rounded-md font-medium w-1/4 self-center"
-        aria-label="Entrar no sistema"
-      >
-        Entrar
-      </button>
-      <button
-        onClick={onRegisterButton}
-        className="text-amber-500 px-4 py-2 rounded-md font-xs self-center"
-        aria-label="Ir para a página de registro"
-      >
-        Ainda não sou cadastrada/o
-      </button>
+          <button
+            type="submit"
+            className="border border-amber-500 text-amber-500 px-4 py-2 rounded-md font-medium w-full"
+            aria-label="Entrar no sistema"
+          >
+            Entrar
+          </button>
+          <button
+            onClick={onRegisterButton}
+            className="w-full text-amber-500 px-4 py-2 rounded-md font-xs mt-4"
+            aria-label="Ir para a página de registro"
+          >
+            Ainda não sou cadastrada/o
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
+
+// Validação de Propriedades
+Login.propTypes = {
+  onLoginSubmit: PropTypes.func.isRequired, // Certificando-se de que onLoginSubmit é uma função
+};
 
 export default Login;

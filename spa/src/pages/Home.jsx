@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { v4 } from "uuid";
 import { useSearchParams } from "react-router-dom";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/NavBar"; // Importando a NavBar
 import AddMovie from "../components/AddMovie";
 import Movies from "../components/Movies";
 import MoviesSeen from "../components/MoviesSeen";
@@ -9,7 +9,6 @@ import Katerine from "../components/Katerine";
 import Nathalie from "../components/Nathalie";
 
 function Home() {
-  // Adiciona estilos globais ao carregar a página
   useEffect(() => {
     document.body.classList.add("bg-black", "text-white");
     return () => {
@@ -17,11 +16,9 @@ function Home() {
     };
   }, []);
 
-  // Obtém email da URL
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
 
-  // Estados para lista de filmes e filmes assistidos
   const [movies, setMovies] = useState([
     { id: 1, title: "filme 1", inSeen: false },
     { id: 2, title: "filme 2", inSeen: false },
@@ -30,7 +27,6 @@ function Home() {
 
   const [moviesSeen, setMoviesSeen] = useState([]);
 
-  // Manipulação de filmes
   const onMovieClick = (movieId) => {
     const updatedMovies = movies.filter((movie) => movie.id !== movieId);
     const movieToMove = movies.find((movie) => movie.id === movieId);
@@ -59,22 +55,14 @@ function Home() {
   const onClearAllMovies = () => setMovies([]);
   const onClearAllMoviesSeen = () => setMoviesSeen([]);
 
-  // Renderização da página
   return (
-    <div className="w-screen h-auto flex flex-col font-josefin-sans">
-      {/* Barra de Navegação */}
+    <div className="w-screen bg-black flex flex-col">
+      {/* NavBar adicionado */}
       <NavBar />
 
-      {/* Conteúdo Principal */}
-      <div className="w-screen bg-black flex justify-center p-6">
-        <div className="w-[800px]">
+      <div className="w-screen bg-black flex justify-center p-6 flex-grow">
+        <div>
           <div id="cinelist">
-            {/* Introdução */}
-            <img
-              src="./static/CINELIST.jpg"
-              alt="CINELIST LOGO"
-              className="w-full mt-10 mb-10"
-            />
             <p className="text-center text-white mb-4">{email}</p>
             <p className="text-center text-white p-8 mt-10 mb-10">
               Com o CINELIST, você pode criar sua lista de filmes perfeita! Em
@@ -85,10 +73,8 @@ function Home() {
             </p>
           </div>
 
-          {/* Adicionar Filme */}
           <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
 
-          {/* Listas de Filmes */}
           <div className="flex gap-4 mt-10 mb-10" id="listas">
             <div className="flex-1">
               <Movies
@@ -107,7 +93,6 @@ function Home() {
             </div>
           </div>
 
-          {/* Sobre Nós */}
           <section id="sobreNos" className="text-center mt-20">
             <h1 className="text-amber-500 tracking-widest text-lg mb-4">
               SOBRE NÓS
@@ -131,11 +116,6 @@ function Home() {
               </div>
             </div>
           </section>
-
-          {/* Rodapé */}
-          <footer className="flex justify-center items-center text-center text-xs text-white mt-16 p-4">
-            <p>Desenvolvido por Katerine Witkoski e Nathalie Taylor - 2024</p>
-          </footer>
         </div>
       </div>
     </div>
