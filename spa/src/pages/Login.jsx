@@ -104,7 +104,7 @@ function Login({ onLoginSubmit }) {
 
 // Validação de Propriedades
 Login.propTypes = {
-  onLoginSubmit: PropTypes.func.isRequired, // Certificando-se de que onLoginSubmit é uma função
+  onLoginSubmit: PropTypes.func.isRequired,
 };
 
 export default Login;
