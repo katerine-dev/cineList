@@ -18,15 +18,3 @@ docker run -d \
     -p 3306:3306 \
     mysql:latest
 ```
-
-## REACT
-
-```
-npm install
-```
-
-```
-npm run dev
-```
-
-OBS: rodar sempre no diretório do frontend (spa)
