@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { v4 } from "uuid";
 import { useSearchParams } from "react-router-dom";
-import NavBar from "../components/NavBar"; // Importando a NavBar
+import NavBar from "../components/NavBar";
 import AddMovie from "../components/AddMovie";
 import Movies from "../components/Movies";
 import MoviesSeen from "../components/MoviesSeen";
@@ -57,7 +57,7 @@ function Home() {
 
   return (
     <div className="w-screen bg-black flex flex-col">
-      {/* NavBar adicionado */}
+      {/* NavBar */}
       <NavBar />
 
       <div className="w-screen bg-black flex justify-center p-6 flex-grow">
