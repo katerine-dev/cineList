@@ -1,4 +1,5 @@
-import { CheckIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
+import PropTypes from "prop-types";
 
 function Movies({
   movies,
@@ -40,7 +41,7 @@ function Movies({
       </ul>
       <button
         onClick={onClearAllMovies}
-        className="hover:text-black text-xs text-amber-500 py-2 px-6 font-josefin-sans"
+        className="hover:text-black text-xs text-amber-500 py-2 font-josefin-sans"
         aria-label="Limpar toda a lista de filmes para assistir"
       >
         Limpar Tudo
@@ -48,5 +49,13 @@ function Movies({
     </div>
   );
 }
+
+// Validação de propriedades
+Movies.propTypes = {
+  movies: PropTypes.array.isRequired,
+  onMovieClick: PropTypes.func.isRequired,
+  onDeleteMovieClick: PropTypes.func.isRequired,
+  onClearAllMovies: PropTypes.func.isRequired,
+};
 
 export default Movies;

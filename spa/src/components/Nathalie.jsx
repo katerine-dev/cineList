@@ -3,7 +3,11 @@ import { Github, Linkedin } from "lucide-react";
 
 function Nathalie() {
   return (
-    <nav aria-label="Perfil de Nathalie">
+    <nav
+      className="bg-black text-white p-4 rounded-md"
+      role="navigation"
+      aria-label="Perfil de Nathalie"
+    >
       <ul>
         <li>
           <h1

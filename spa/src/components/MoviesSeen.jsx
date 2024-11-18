@@ -6,6 +6,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import PropTypes from "prop-types";
+
 function MoviesSeen({
   moviesSeen,
   onDeleteMovieSeenClick,
@@ -133,7 +135,7 @@ function MoviesSeen({
       </ul>
       <button
         onClick={onClearAllMoviesSeen}
-        className="hover:text-black text-xs text-amber-500 py-2 px-6"
+        className="hover:text-black text-xs text-amber-500 py-2"
         aria-label="Limpar todos os filmes da lista de assistidos"
       >
         Limpar Tudo
@@ -141,5 +143,11 @@ function MoviesSeen({
     </div>
   );
 }
+
+MoviesSeen.propTypes = {
+  moviesSeen: PropTypes.array.isRequired,
+  onDeleteMovieSeenClick: PropTypes.func.isRequired,
+  onClearAllMoviesSeen: PropTypes.func.isRequired,
+};
 
 export default MoviesSeen;

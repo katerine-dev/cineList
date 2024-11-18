@@ -60,11 +60,11 @@ function Home() {
       {/* NavBar */}
       <NavBar />
 
-      <div className="w-screen bg-black flex justify-center p-6 flex-grow">
-        <div>
-          <div id="cinelist">
-            <p className="text-center text-white mb-4">{email}</p>
-            <p className="text-center text-white p-8 mt-10 mb-10">
+      <div className="w-full max-w-7xl mx-auto bg-black flex justify-center p-6 flex-grow">
+        <div className="w-full space-y-6">
+          <div id="cinelist" className="text-center">
+            <p className="text-white mb-2">Olá, {email}</p>
+            <p className="w-full gap-6 mx-auto text-white p-4 mt-10 mb-10 max-w-4xl">
               Com o CINELIST, você pode criar sua lista de filmes perfeita! Em
               um único lugar é possível adicionar, gerenciar e acompanhar seus
               filmes favoritos de maneira simples e intuitiva. Organize sua
@@ -73,10 +73,15 @@ function Home() {
             </p>
           </div>
 
-          <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
+          <div className="max-w-4xl mx-auto mt-10 mb-10">
+            <AddMovie onAddMovieSubmit={onAddMovieSubmit} />
+          </div>
 
-          <div className="flex gap-4 mt-10 mb-10" id="listas">
-            <div className="flex-1">
+          <div
+            id="listas"
+            className="w-full flex max-w-4xl mx-auto gap-6 mt-10 mb-10 justify-center"
+          >
+            <div className="w-full max-w-md">
               <Movies
                 movies={movies}
                 onMovieClick={onMovieClick}
@@ -84,7 +89,7 @@ function Home() {
                 onClearAllMovies={onClearAllMovies}
               />
             </div>
-            <div className="flex-1">
+            <div className="w-full max-w-md">
               <MoviesSeen
                 moviesSeen={moviesSeen}
                 onDeleteMovieSeenClick={onDeleteMovieSeenClick}
@@ -92,27 +97,28 @@ function Home() {
               />
             </div>
           </div>
-
           <section id="sobreNos" className="text-center mt-20">
             <h1 className="text-amber-500 tracking-widest text-lg mb-4">
               SOBRE NÓS
             </h1>
-            <div className="flex mt-4">
-              <div className="flex items-center space-x-2 w-1/2">
-                <img
-                  src="./static/sapiens-avatar.png"
-                  alt="Avatar Katerine"
-                  className="w-32 h-32 rounded-full"
-                />
-                <Katerine />
-              </div>
-              <div className="flex items-center space-x-2 w-1/2">
-                <img
-                  src="./static/sapiens-avatar-2.png"
-                  alt="Avatar Nathalie"
-                  className="w-32 h-32 rounded-full"
-                />
-                <Nathalie />
+            <div className="w-full flex max-w-4xl mx-auto gap-6 mt-10 mb-10 justify-center">
+              <div className="flex mt-4 justify-center gap-4">
+                <div className="flex items-center space-x-2 w-1/2">
+                  <img
+                    src="./static/sapiens-avatar.png"
+                    alt="Avatar Katerine"
+                    className="w-32 h-32 rounded-full"
+                  />
+                  <Katerine />
+                </div>
+                <div className="flex items-center space-x-2 w-1/2">
+                  <img
+                    src="./static/sapiens-avatar-2.png"
+                    alt="Avatar Nathalie"
+                    className="w-32 h-32 rounded-full"
+                  />
+                  <Nathalie />
+                </div>
               </div>
             </div>
           </section>

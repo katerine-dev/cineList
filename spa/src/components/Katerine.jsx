@@ -23,7 +23,11 @@ function Katerine() {
           >
             Graduanda em Ciência da Computação - UAM
           </p>
-          <div className="flex gap-2">
+          <div
+            className="flex gap-2"
+            role="navigation"
+            aria-label="Links sociais"
+          >
             <a
               href="https://github.com/katerine-dev"
               target="_blank"
