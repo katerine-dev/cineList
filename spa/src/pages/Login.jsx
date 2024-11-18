@@ -27,9 +27,14 @@ function Login({ onLoginSubmit }) {
   };
 
   // Função para redirecionar para a página de registro
-  function onRegisterButton() {
+  const onRegisterButton = () => {
     navigate("/registro"); // Navega para a página de registro
-  }
+  };
+
+  // Função para redirecionar para a página de recuperação de senha
+  const onForgotPassword = () => {
+    navigate("/recuperar-senha"); // Navega para a página de recuperação de senha
+  };
 
   return (
     <div className="w-full bg-black flex justify-center items-center flex-grow py-10">
@@ -73,6 +78,7 @@ function Login({ onLoginSubmit }) {
           >
             Entrar
           </button>
+
           <button
             onClick={onRegisterButton}
             className="w-full text-amber-500 px-4 py-2 rounded-md font-xs mt-4"
@@ -80,6 +86,16 @@ function Login({ onLoginSubmit }) {
           >
             Ainda não sou cadastrada/o
           </button>
+
+          <div className="text-center mt-4">
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="text-sm text-amber-500"
+            >
+              Esqueci minha senha
+            </button>
+          </div>
         </form>
       </div>
     </div>

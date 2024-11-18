@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // At
 import Home from "./pages/Home";
 import Registro from "./pages/Registro";
 import Login from "./pages/Login";
+import RecuperarSenha from "./pages/RecuperarSenha"; // Importando a nova página
 import Layout from "./components/Layout";
 import "./index.css";
 
@@ -45,6 +46,14 @@ function App() {
           element={
             <Layout>
               <Registro />
+            </Layout>
+          }
+        />
+        <Route
+          path="/recuperar-senha" // Nova rota para recuperação de senha
+          element={
+            <Layout>
+              <RecuperarSenha />
             </Layout>
           }
         />
