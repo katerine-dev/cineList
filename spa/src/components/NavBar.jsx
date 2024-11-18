@@ -1,36 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { House, Popcorn, Ellipsis, CircleUser } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import PropTypes from "prop-types";
 
 function NavBar() {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
-
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
+  const menuRef = useRef(null); // Referência para o menu do usuário - TODO: precisamos adicionar aqui uma chamada/rota para o valor do email.
 
-  const onHouseClick = () => {
-    const cinelistSection = document.getElementById("cinelist");
-    cinelistSection?.scrollIntoView({ behavior: "smooth" });
+  // Resumi em uma só função para adicionar a rolagem até uma seção específica
+  const handleScrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    // Verificação se está encontrando mesmo a sessão correta
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      console.log(`Rolando para a seção: ${sectionId}`);
+    } else {
+      console.error(`Seção com ID "${sectionId}" não encontrada.`);
+    }
   };
 
-  const onPopcornClick = () => {
-    const listasSection = document.getElementById("listas");
-    listasSection?.scrollIntoView({ behavior: "smooth" });
-  };
+  const toggleUserMenu = () => setShowMenu((prev) => !prev);
 
-  const onEllipsisClick = () => {
-    const sobreNosSection = document.getElementById("sobreNos");
-    sobreNosSection?.scrollIntoView({ behavior: "smooth" });
-  };
+  const logout = () => navigate("/");
 
-  const onUserClick = () => {
-    setShowMenu((prev) => !prev);
-  };
+  // Fechar menu ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenu(false); // Fecha o menu se o clique for fora dele
+      }
+    };
 
-  const onLogoutClick = () => {
-    navigate("/");
-  };
+    // Adiciona o event listener no clique do documento
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Remove o event listener ao desmontar o componente
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav
@@ -39,40 +50,35 @@ function NavBar() {
       aria-label="Barra de Navegação"
     >
       <div className="flex justify-between items-center max-w-7xl mx-auto">
+        {/* Navegação Principal */}
         <ul className="flex space-x-6 text-white">
-          <li>
-            <button
-              onClick={onHouseClick}
-              className="hover:text-amber-400"
-              aria-label="Ir para seção principal do CINELIST"
-            >
-              <House aria-hidden="true" />
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={onPopcornClick}
-              className="hover:text-amber-500"
-              aria-label="Ir para a seção de listas"
-            >
-              <Popcorn aria-hidden="true" />
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={onEllipsisClick}
-              className="hover:text-amber-400"
-              aria-label="Ir para a seção sobre nós"
-            >
-              <Ellipsis aria-hidden="true" />
-            </button>
-          </li>
+          <NavButton
+            onClick={() => handleScrollToSection("cinelist")}
+            icon={<House aria-hidden="true" />}
+            label="Ir para seção principal do CINELIST"
+          />
+          <NavButton
+            onClick={() => handleScrollToSection("listas")}
+            icon={<Popcorn aria-hidden="true" />}
+            label="Ir para a seção de listas"
+          />
+          <NavButton
+            onClick={() => handleScrollToSection("sobreNos")}
+            icon={<Ellipsis aria-hidden="true" />}
+            label="Ir para a seção sobre nós"
+          />
         </ul>
 
-        <div className="relative">
-          <p className="text-white">{email}</p>
+        {/* Menu do Usuário TODO*/}
+        <div className="flex items-center space-x-2 relative" ref={menuRef}>
+          <p
+            className="text-white truncate max-w-[150px] overflow-hidden text-ellipsis"
+            title={email || "Usuário"} // Exibe o email completo ao passar o mouse
+          >
+            {email || "Usuário"}
+          </p>
           <button
-            onClick={onUserClick}
+            onClick={toggleUserMenu}
             className="text-white hover:text-amber-400"
             aria-label="Menu do usuário"
             aria-expanded={showMenu}
@@ -90,7 +96,7 @@ function NavBar() {
               <ul className="flex flex-col">
                 <li>
                   <button
-                    onClick={onLogoutClick}
+                    onClick={logout}
                     className="block px-4 py-2 hover:bg-gray-800 text-left w-full"
                     role="menuitem"
                     aria-label="Sair e voltar à página de login"
@@ -106,5 +112,25 @@ function NavBar() {
     </nav>
   );
 }
+
+function NavButton({ onClick, icon, label }) {
+  return (
+    <li>
+      <button
+        onClick={onClick}
+        className="hover:text-amber-400"
+        aria-label={label}
+      >
+        {icon}
+      </button>
+    </li>
+  );
+}
+
+NavButton.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  icon: PropTypes.node.isRequired,
+  label: PropTypes.string.isRequired,
+};
 
 export default NavBar;
