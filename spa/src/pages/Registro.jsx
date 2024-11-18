@@ -8,7 +8,10 @@ function Registro() {
   const [feedback, setFeedback] = useState("");
   const navigate = useNavigate();
 
-  const handleCadastro = () => {
+  // Função chamada quando o cadastro for realizado
+  const handleCadastro = (event) => {
+    event.preventDefault(); // Previne o comportamento padrão do form de recarregar a página
+
     if (!CPF.trim() || !email.trim() || !senha.trim()) {
       setFeedback("Por favor, preencha todos os campos obrigatórios.");
       return;
@@ -18,7 +21,7 @@ function Registro() {
     setCPF("");
     setEmail("");
     setSenha("");
-    navigate("/login");
+    navigate("/login"); // Redireciona para a página de login após o cadastro
   };
 
   return (
@@ -42,6 +45,8 @@ function Registro() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             aria-required="true"
+            aria-label="Digite seu email"
+            autoComplete="email"
           />
           <input
             id="senha"
@@ -51,6 +56,8 @@ function Registro() {
             value={senha}
             onChange={(event) => setSenha(event.target.value)}
             aria-required="true"
+            aria-label="Digite sua senha"
+            autoComplete="current-password"
           />
           <button
             onClick={handleCadastro}

@@ -1,6 +1,6 @@
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Atualização aqui
 import Home from "./pages/Home";
 import Registro from "./pages/Registro";
 import Login from "./pages/Login";
@@ -12,57 +12,64 @@ const onLoginSubmit = (email) => {
   console.log("Login com:", email);
 };
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <Layout>
-        <Login onLoginSubmit={onLoginSubmit} />
-      </Layout>
-    ),
-  },
-  {
-    path: "/home",
-    element: (
-      <Layout>
-        <Home />
-      </Layout>
-    ),
-  },
-  {
-    path: "/login", // Rota para o login
-    element: (
-      <Layout>
-        <Login onLoginSubmit={onLoginSubmit} />
-      </Layout>
-    ),
-  },
-  {
-    path: "/registro",
-    element: (
-      <Layout>
-        <Registro />
-      </Layout>
-    ),
-  },
-  {
-    path: "*", // Rota para qualquer página não encontrada (erro 404)
-    element: (
-      <Layout>
-        <div className="text-center text-white p-10">
-          <h2>404 - Página Não Encontrada</h2>
-          <p>
-            A página que você procura não existe. Verifique o URL ou vá para a
-            página inicial.
-          </p>
-        </div>
-      </Layout>
-    ),
-  },
-]);
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <Login onLoginSubmit={onLoginSubmit} />
+            </Layout>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <Layout>
+              <Home />
+            </Layout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Layout>
+              <Login onLoginSubmit={onLoginSubmit} />
+            </Layout>
+          }
+        />
+        <Route
+          path="/registro"
+          element={
+            <Layout>
+              <Registro />
+            </Layout>
+          }
+        />
+        {/* Rota para lidar com qualquer página não encontrada */}
+        <Route
+          path="*"
+          element={
+            <Layout>
+              <div className="text-center text-white p-10">
+                <h2>404 - Página Não Encontrada</h2>
+                <p>
+                  A página que você procura não existe. Verifique o URL ou vá
+                  para a página inicial.
+                </p>
+              </div>
+            </Layout>
+          }
+        />
+      </Routes>
+    </Router>
+  );
+}
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <App />
   </StrictMode>
 );

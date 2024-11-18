@@ -18,7 +18,9 @@ function Layout({ children }) {
 
       {/* Footer */}
       <footer className="flex justify-center items-center text-center text-xs text-white p-4 bg-black">
-        <p>Desenvolvido por Katerine Witkoski e Nathalie Taylor - 2024</p>
+        <p>
+          Desenvolvido com amor por Katerine Witkoski e Nathalie Taylor - 2024
+        </p>
       </footer>
     </div>
   );

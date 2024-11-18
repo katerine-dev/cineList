@@ -8,8 +8,8 @@ function Login({ onLoginSubmit }) {
   const navigate = useNavigate();
 
   // Função chamada quando o login for realizado
-  function handleLogin(event) {
-    event.preventDefault();
+  const handleLogin = (event) => {
+    event.preventDefault(); // Impede o comportamento padrão do formulário
 
     if (!email.trim() || !senha.trim()) {
       return alert("Campos obrigatórios");
@@ -24,7 +24,7 @@ function Login({ onLoginSubmit }) {
 
     // Navega para a página "home" após o login bem-sucedido
     navigate(`/home?email=${email}`);
-  }
+  };
 
   // Função para redirecionar para a página de registro
   function onRegisterButton() {
@@ -48,6 +48,7 @@ function Login({ onLoginSubmit }) {
             onChange={(event) => setEmail(event.target.value)}
             aria-required="true"
             aria-label="Digite seu email"
+            autoComplete="email"
           />
 
           <label htmlFor="senha" className="sr-only">
@@ -62,6 +63,7 @@ function Login({ onLoginSubmit }) {
             onChange={(event) => setSenha(event.target.value)}
             aria-required="true"
             aria-label="Digite sua senha"
+            autoComplete="current-password"
           />
 
           <button
