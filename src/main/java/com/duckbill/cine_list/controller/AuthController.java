@@ -1,70 +1,110 @@
 package com.duckbill.cine_list.controller;
 
-import com.duckbill.cine_list.db.entity.Usuario;
-import com.duckbill.cine_list.db.repository.UsuarioRepository;
-import com.duckbill.cine_list.dto.LoginRequestDTO;
-import com.duckbill.cine_list.dto.RegisterRequestDTO;
-import com.duckbill.cine_list.dto.ResponseDTO;
-import com.duckbill.cine_list.infra.security.TokenService;
+import com.duckbill.cine_list.dto.*;
+import com.duckbill.cine_list.service.UsuarioService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
 
-    public AuthController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenService = tokenService;
+    private final UsuarioService usuarioService;
+
+    public AuthController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO body) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(body.email());
-        if (usuarioOpt.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO body, HttpServletResponse response) {
+        try {
+            LoginResponseDTO responseDTO = usuarioService.login(body.email(), body.senha());
+
+            String token = responseDTO.getToken();
+
+            // Criação do cookie com o token JWT
+            Cookie cookie = new Cookie("authToken", token);
+            cookie.setHttpOnly(true); // Torna o cookie inacessível via JavaScript!!!
+            cookie.setSecure(false);   // Define o cookie como seguro (se estiver em HTTPS)
+            cookie.setPath("/");      // Define o caminho para o qual o cookie será enviado
+            cookie.setMaxAge(3600);   // Define a expiração do cookie (1 hora)
+            response.addCookie(cookie); // Adiciona o cookie à resposta
+
+            return ResponseEntity.ok(responseDTO);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Erro ao realizar login.");
         }
-        Usuario usuario = usuarioOpt.get();
-        if (passwordEncoder.matches(body.senha(), usuario.getSenha())) {
-            String token = tokenService.generateToken(usuario);
-            return ResponseEntity.ok(new ResponseDTO(usuario.getNome(), token));
-        }
-        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body) {
-        // Verifique se a senha e o CPF estão presentes
-        if (body.senha() == null || body.senha().isEmpty()) {
-            return ResponseEntity.badRequest().body("Senha não pode ser vazia.");
-        }
-        if (body.cpf() == null || body.cpf().isEmpty()) {
-            return ResponseEntity.badRequest().body("CPF não pode ser vazio.");
-        }
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body, HttpServletResponse response) {
+        try {
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
+            usuarioDTO.setNome(body.nome());
+            usuarioDTO.setEmail(body.email());
+            usuarioDTO.setCpf(body.cpf());
+            usuarioDTO.setSenha(body.senha());
 
-        Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(body.email());
-        if (usuarioExistente.isEmpty()) {
-            Usuario novoUsuario = new Usuario();
-            novoUsuario.setSenha(passwordEncoder.encode(body.senha()));
-            novoUsuario.setEmail(body.email());
-            novoUsuario.setNome(body.nome());
-            novoUsuario.setCpf(body.cpf());  // Verifique se o CPF está sendo definido aqui
-            usuarioRepository.save(novoUsuario);
+            ResponseDTO responseDTO = usuarioService.register(usuarioDTO);
+            String token = responseDTO.getToken();
 
-            String token = tokenService.generateToken(novoUsuario);
-            return ResponseEntity.ok(new ResponseDTO(novoUsuario.getNome(), token));
+            Cookie cookie = new Cookie("authToken", token);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(false);
+            cookie.setPath("/");
+            cookie.setMaxAge(3600);
+            response.addCookie(cookie);
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro ao registrar usuário.");
         }
-
-        return ResponseEntity.badRequest().build();
     }
+    // TODO
+    // Esqueci minha senha (gera e envia token)
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<?> forgotPassword(@RequestBody String email) {
+//        if (email == null || email.isEmpty()) {
+//            return ResponseEntity.badRequest().body("E-mail é obrigatório.");
+//        }
+//
+//        String token = usuarioService.generateAndSendPasswordResetToken(email);
+//
+//        if (token == null) {
+//            // Retorna mensagem genérica para não expor a existência ou não do e-mail no sistema
+//            return ResponseEntity.ok("Se o e-mail existir em nossa base, as instruções de recuperação foram enviadas.");
+//        }
+//
+//        // Opcional: Retornar o token para desenvolvimento ou debug
+//        return ResponseEntity.ok(Map.of(
+//                "message", "Se o e-mail existir em nossa base, as instruções de recuperação foram enviadas.",
+//                "token", token
+//        ));
+//    }
+//
+//    // Redefinir senha
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> payload) {
+//        String token = payload.get("token");
+//        String newPassword = payload.get("newPassword");
+//
+//        if (newPassword == null || newPassword.isEmpty()) {
+//            return ResponseEntity.badRequest().body("A nova senha é obrigatória.");
+//        }
+//
+//        boolean resetSuccess = usuarioService.resetPasswordWithToken(token, newPassword);
+//        if (resetSuccess) {
+//            return ResponseEntity.ok("Senha redefinida com sucesso.");
+//        } else {
+//            return ResponseEntity.badRequest().body("Token inválido ou expirado.");
+//        }
+//    }
 }

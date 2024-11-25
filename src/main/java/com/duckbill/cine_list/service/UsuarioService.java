@@ -2,9 +2,13 @@ package com.duckbill.cine_list.service;
 
 import com.duckbill.cine_list.db.entity.Usuario;
 import com.duckbill.cine_list.db.repository.UsuarioRepository;
+import com.duckbill.cine_list.dto.LoginResponseDTO;
+import com.duckbill.cine_list.dto.ResponseDTO;
 import com.duckbill.cine_list.dto.UsuarioDTO;
+import com.duckbill.cine_list.infra.security.TokenService;
 import com.duckbill.cine_list.mapper.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,33 +17,82 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
 @Service
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
+    //private final EmailService emailService; TODO
 
-    // Metodo para criar um novo usuário com data de criação
+    @Autowired
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
+        //this.emailService = emailService; TODO
+    }
+
+    // Metodo para registrar um novo usuário e retornar o token
+    public ResponseDTO register(UsuarioDTO usuarioDTO) {
+        if (usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("E-mail já está em uso.");
+        }
+
+        if (!isValidCPF(usuarioDTO.getCpf())) {
+            throw new IllegalArgumentException("CPF inválido.");
+        }
+
+        Usuario usuario = UsuarioMapper.toEntity(usuarioDTO);
+        usuario.setId(UUID.randomUUID());
+        usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+
+        Usuario savedUsuario = usuarioRepository.save(usuario);
+
+        String token = tokenService.generateToken(savedUsuario);
+
+        return new ResponseDTO(savedUsuario.getNome(), token);
+    }
+
+    // Metodo para Login do usuário
+    public LoginResponseDTO login(String email, String senha) {
+        // Procurando o usuário no banco de dados
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("E-mail ou senha inválidos."));
+
+        // Verificando a senha
+        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
+            throw new IllegalArgumentException("E-mail ou senha inválidos.");
+        }
+
+        // Gerando o token
+        String token = tokenService.generateToken(usuario);
+
+        // Retornando o ResponseDTO com nome do usuário e o token gerado
+        return new LoginResponseDTO(usuario.getNome(), usuario.getEmail(), token);
+    }
+
+    // Metodo para pega criar usuario (sem token)
     public UsuarioDTO create(UsuarioDTO usuarioDTO) {
         Usuario usuario = UsuarioMapper.toEntity(usuarioDTO);
-        usuario.setId(UUID.randomUUID()); // Gera o UUID diretamente sem converter para String
+        usuario.setId(UUID.randomUUID());
 
         if (!isValidCPF(usuario.getCpf())) {
             throw new IllegalArgumentException("CPF inválido");
         }
 
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario savedUsuario = usuarioRepository.save(usuario);
         return UsuarioMapper.toDto(savedUsuario);
     }
 
-    // Metodo para buscar um usuário pelo ID
+    // Metodo para pega usuario por id
     public Optional<UsuarioDTO> getById(UUID id) {
         return usuarioRepository.findById(id)
                 .map(UsuarioMapper::toDto);
     }
 
-    // Metodo para listar todos os usuários
+    // Metodo para pegar todos
     public List<UsuarioDTO> getAll() {
         return usuarioRepository.findAll()
                 .stream()
@@ -47,13 +100,16 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // Metodo para atualizar um usuário existente
-    public UsuarioDTO update(UUID id, UsuarioDTO usuarioDTO) {
+    // Metodo para update usuário
+    public ResponseDTO update(UUID id, UsuarioDTO usuarioDTO) {
         return usuarioRepository.findById(id)
                 .map(usuario -> {
                     usuario.setNome(usuarioDTO.getNome());
                     usuario.setEmail(usuarioDTO.getEmail());
-                    usuario.setCpf(usuarioDTO.getCpf());
+
+                    if (!usuario.getCpf().equals(usuarioDTO.getCpf())) {
+                        usuario.setCpf(usuarioDTO.getCpf());
+                    }
 
                     if (!isValidCPF(usuario.getCpf())) {
                         throw new IllegalArgumentException("CPF inválido");
@@ -61,12 +117,14 @@ public class UsuarioService {
 
                     usuario.setUpdatedAt(LocalDateTime.now());
                     Usuario updatedUsuario = usuarioRepository.save(usuario);
-                    return UsuarioMapper.toDto(updatedUsuario);
+                    String newToken = tokenService.generateToken(updatedUsuario);
+
+                    return new ResponseDTO(updatedUsuario.getNome(), newToken);
                 })
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    // Metodo para deletar logicamente um usuário
+    // Metodo para deletar usuário
     public void delete(UUID id) {
         usuarioRepository.findById(id).ifPresent(usuario -> {
             usuario.setDeletedAt(LocalDateTime.now());
@@ -74,7 +132,12 @@ public class UsuarioService {
         });
     }
 
-    // Validação de CPF simplificada
+    // Metodo para buscar o usuário pelo e-mail
+    public Optional<UsuarioDTO> getByEmail(String email) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        return usuario.map(UsuarioMapper::toDto);
+    }
+
     private boolean isValidCPF(String cpf) {
         String cpfClean = cpf.replaceAll("\\D", "");
 
@@ -98,5 +161,39 @@ public class UsuarioService {
         int resto = 11 - (soma % 11);
         return (resto > 9) ? 0 : resto;
     }
+
+    // TODO
+//    public String generateAndSendPasswordResetToken(String email) {
+//        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
+//
+//        if (optionalUsuario.isEmpty()) {
+//            return null; // Email não encontrado
+//        }
+//
+//        Usuario usuario = optionalUsuario.get();
+//        String token = UUID.randomUUID().toString(); // Gera token automaticamente com UUID
+//        usuario.setPasswordResetToken(token);
+//        usuario.setTokenExpirationTime(LocalDateTime.now().plusHours(1));
+//
+//        usuarioRepository.save(usuario);
+//        emailService.sendPasswordResetEmail(email, token);
+//        return token;
+//    }
+//
+//    public boolean resetPasswordWithToken(String token, String newPassword) {
+//        Optional<Usuario> optionalUsuario = usuarioRepository.findByPasswordResetToken(token);
+//        if (optionalUsuario.isPresent()) {
+//            Usuario usuario = optionalUsuario.get();
+//            if (usuario.getTokenExpirationTime() != null && usuario.getTokenExpirationTime().isBefore(LocalDateTime.now())) {
+//                return false; // Token expirado
+//            }
+//            usuario.setSenha(passwordEncoder.encode(newPassword));
+//            usuario.setPasswordResetToken(null);
+//            usuario.setTokenExpirationTime(null);
+//            usuarioRepository.save(usuario);
+//            return true;
+//        }
+//        return false;
+//    }
 
 }

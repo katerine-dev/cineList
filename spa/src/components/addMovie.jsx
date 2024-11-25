@@ -1,19 +1,25 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
 
 function AddMovie({ onAddMovieSubmit }) {
-  const [title, setTitle] = useState("");
+  const [titulo, setTitulo] = useState("");
   const [feedback, setFeedback] = useState("");
 
-  const handleAddMovie = () => {
-    if (!title.trim()) {
+  const handleAddMovie = async (event) => {
+    event.preventDefault();
+
+    if (!titulo.trim()) {
       setFeedback("Por favor, preencha o título do filme.");
       return;
     }
 
-    onAddMovieSubmit(title);
-    setTitle("");
-    setFeedback("Filme adicionado com sucesso!");
+    try {
+      await onAddMovieSubmit(titulo);
+      setTitulo("");
+      setFeedback("Filme adicionado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao adicionar filme:", error);
+      setFeedback("Erro ao adicionar filme. Tente novamente.");
+    }
   };
 
   return (
@@ -27,8 +33,8 @@ function AddMovie({ onAddMovieSubmit }) {
           type="text"
           placeholder="Digite o título do filme"
           className="flex-grow px-4 py-2 rounded-md text-black"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
+          value={titulo}
+          onChange={(event) => setTitulo(event.target.value)}
           aria-required="true"
           aria-label="Digite o título do filme"
         />
@@ -51,9 +57,5 @@ function AddMovie({ onAddMovieSubmit }) {
     </div>
   );
 }
-
-AddMovie.propTypes = {
-  onAddMovieSubmit: PropTypes.func.isRequired,
-};
 
 export default AddMovie;

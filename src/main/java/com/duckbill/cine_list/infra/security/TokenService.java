@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.duckbill.cine_list.db.entity.Usuario;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,12 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.create()
-                    .withIssuer("cine-list-api")                // Nome da aplicação ou API
-                    .withSubject(usuario.getEmail())            // Identificador do usuário, por exemplo, o email
-                    .withClaim("authorities", Collections.singletonList("ROLE_USER")) // Define a autoridade
-                    .withExpiresAt(this.generateExpirationDate()) // Define a data de expiração
-                    .sign(algorithm);                          // Assina o token com o algoritmo HMAC256 e a chave secreta
+                    .withIssuer("cine-list-api")
+                    .withSubject(usuario.getEmail())
+                    .withClaim("authorities", Collections.singletonList("ROLE_USER"))
+                    .withClaim("userId", usuario.getId().toString())
+                    .withExpiresAt(this.generateExpirationDate())
+                    .sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Erro ao gerar o token JWT", exception);
         }
@@ -44,9 +46,8 @@ public class TokenService {
                     .withIssuer("cine-list-api")
                     .build()
                     .verify(token)
-                    .getSubject(); // Retorna o "subject" (no caso, o email do usuário) do token
+                    .getSubject();
         } catch (JWTVerificationException exception) {
-            // Token inválido ou expirado
             return null;
         }
     }

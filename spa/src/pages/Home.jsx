@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { v4 } from "uuid";
 import { useSearchParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import AddMovie from "../components/AddMovie";
@@ -7,7 +6,8 @@ import Movies from "../components/Movies";
 import MoviesSeen from "../components/MoviesSeen";
 import Katerine from "../components/Katerine";
 import Nathalie from "../components/Nathalie";
-import { fetchMovies, addMovie, deleteMovie } from "../apis/apiHome"; // Importando as funções de apiHome.js
+import { getAllFilmes, createFilme, deleteFilme }from "../../service/FilmeService";
+
 
 function Home() {
   useEffect(() => {
@@ -18,16 +18,29 @@ function Home() {
   }, []);
 
   const [searchParams] = useSearchParams();
-  const email = searchParams.get("email");
+  const nome = searchParams.get("nome");
 
-  const [movies, setMovies] = useState([]); // Estado de filmes agora vem da API
+  const [movies, setMovies] = useState([]);
   const [moviesSeen, setMoviesSeen] = useState([]);
 
-  // Carrega filmes da API quando o componente for montado
   useEffect(() => {
-    fetchMovies()
-      .then((data) => setMovies(data))
-      .catch((error) => console.error("Erro ao carregar filmes:", error));
+    const fetchMovies = async () => {
+      try {
+        const filmes = await getAllFilmes();
+  
+        // Separar filmes completados e não completados
+        const filmesNaoCompletados = filmes.filter((filme) => !filme.completedAt);
+        const filmesCompletados = filmes.filter((filme) => filme.completedAt);
+  
+        // Atualizar os estados
+        setMovies(filmesNaoCompletados);
+        setMoviesSeen(filmesCompletados);
+      } catch (error) {
+        console.error("Erro ao buscar filmes:", error);
+      }
+    };
+  
+    fetchMovies();
   }, []);
 
   const onMovieClick = (movieId) => {
@@ -42,29 +55,66 @@ function Home() {
     setMovies(updatedMovies);
   };
 
-  const onAddMovieSubmit = (title) => {
-    const newMovie = { id: v4(), title, inSeen: false };
-    addMovie(newMovie)
-      .then((addedMovie) => {
-        setMovies([...movies, addedMovie]); // Adiciona o novo filme à lista
-      })
-      .catch((error) => console.error("Erro ao adicionar filme:", error));
+  const onAddMovieSubmit = async (titulo) => {
+    try {
+      const newMovie = await createFilme({ titulo });
+      setMovies((prevMovies) => [...prevMovies, newMovie]);
+    } catch (error) {
+      console.error("Erro ao adicionar filme:", error);
+    }
+  };
+  
+  const onDeleteMovieClick = async (movieId) => {
+    try {
+      // Envia a requisição para deletar o filme no backend
+      await deleteFilme(movieId);
+  
+      // Atualiza o estado local para remover o filme
+      setMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== movieId));
+    } catch (error) {
+      console.error("Erro ao deletar o filme:", error);
+      alert("Não foi possível deletar o filme. Tente novamente.");
+    }
+  };
+  
+  const onDeleteMovieSeenClick = async (movieId) => {
+    try {
+      // Envia a requisição para deletar o filme no backend
+      await deleteFilme(movieId);
+  
+      // Atualiza o estado local para remover o filme
+      setMoviesSeen((prevMoviesSeen) => prevMoviesSeen.filter((movie) => movie.id !== movieId));
+    } catch (error) {
+      console.error("Erro ao deletar o filme assistido:", error);
+      alert("Não foi possível deletar o filme assistido. Tente novamente.");
+    }
   };
 
-  const onDeleteMovieClick = (movieId) => {
-    deleteMovie(movieId)
-      .then(() => {
-        setMovies(movies.filter((movie) => movie.id !== movieId)); // Remove o filme localmente
-      })
-      .catch((error) => console.error("Erro ao excluir filme:", error));
+  const onClearAllMovies = async () => {
+    try {
+      // Deleta todos os filmes para assistir no backend
+      await Promise.all(movies.map((movie) => deleteFilme(movie.id)));
+  
+      // Limpa o estado local
+      setMovies([]);
+    } catch (error) {
+      console.error("Erro ao limpar a lista de filmes:", error);
+      alert("Não foi possível limpar a lista. Tente novamente.");
+    }
   };
-
-  const onDeleteMovieSeenClick = (movieId) => {
-    setMoviesSeen(moviesSeen.filter((movie) => movie.id !== movieId));
+  
+  const onClearAllMoviesSeen = async () => {
+    try {
+      // Deleta todos os filmes assistidos no backend
+      await Promise.all(moviesSeen.map((movie) => deleteFilme(movie.id)));
+  
+      // Limpa o estado local
+      setMoviesSeen([]);
+    } catch (error) {
+      console.error("Erro ao limpar a lista de filmes assistidos:", error);
+      alert("Não foi possível limpar a lista de filmes assistidos. Tente novamente.");
+    }
   };
-
-  const onClearAllMovies = () => setMovies([]);
-  const onClearAllMoviesSeen = () => setMoviesSeen([]);
 
   return (
     <div className="w-screen bg-black flex flex-col">
@@ -73,7 +123,7 @@ function Home() {
       <div className="w-full max-w-7xl mx-auto bg-black flex justify-center p-6 flex-grow">
         <div className="w-full space-y-6">
           <div id="cinelist" className="text-center">
-            <p className="text-white mb-2">Bem vinda/o, {email}</p>
+            <p className="text-white mb-2">Bem vinda/o! {nome}! </p>
             <p className="w-full gap-6 mx-auto text-white p-4 mt-10 mb-10 max-w-4xl">
               Com o CINELIST, você pode criar sua lista de filmes perfeita! Em
               um único lugar é possível adicionar, gerenciar e acompanhar seus
@@ -89,7 +139,7 @@ function Home() {
 
           <div
             id="listas"
-            className="w-full flex max-w-4xl mx-auto gap-6 mt-10 mb-20  justify-center"
+            className="w-full flex max-w-4xl mx-auto gap-6 mt-10 mb-20 justify-center"
           >
             <div className="w-full max-w-md">
               <Movies
@@ -103,6 +153,7 @@ function Home() {
               <MoviesSeen
                 moviesSeen={moviesSeen}
                 onDeleteMovieSeenClick={onDeleteMovieSeenClick}
+                setMoviesSeen={setMoviesSeen}
                 onClearAllMoviesSeen={onClearAllMoviesSeen}
               />
             </div>
@@ -116,7 +167,7 @@ function Home() {
                 <div className="flex mt-4 justify-center gap-4">
                   <div className="flex items-center space-x-2 w-1/2">
                     <img
-                      src="./static/sapiens-avatar.png"
+                      src="./assets/sapiens-avatar.png"
                       alt="Avatar Katerine"
                       className="w-32 h-32 rounded-full"
                     />
@@ -124,7 +175,7 @@ function Home() {
                   </div>
                   <div className="flex items-center space-x-2 w-1/2">
                     <img
-                      src="./static/sapiens-avatar-2.png"
+                      src="./assets/sapiens-avatar-2.png"
                       alt="Avatar Nathalie"
                       className="w-32 h-32 rounded-full"
                     />

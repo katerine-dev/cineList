@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "usuario") // Define a tabela "usuario" no banco de dados
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, unique = true) // Define o e-mail como obrigatório e único
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -29,6 +29,12 @@ public class Usuario {
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Filme> filmesCriados;
+
+    @Column(name = "password_reset_token")
+    private String passwordResetToken;
+
+    @Column(name = "token_expiration_time")
+    private LocalDateTime tokenExpirationTime;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -113,4 +119,13 @@ public class Usuario {
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
+    // TODO: Esqueci minha senha
+    public String getPasswordResetToken() { return passwordResetToken; }
+
+    public void setPasswordResetToken(String passwordResetToken) { this.passwordResetToken = passwordResetToken; }
+
+    public LocalDateTime getTokenExpirationTime() { return tokenExpirationTime; }
+
+    public void setTokenExpirationTime(LocalDateTime tokenExpirationTime) { this.tokenExpirationTime = tokenExpirationTime; }
 }

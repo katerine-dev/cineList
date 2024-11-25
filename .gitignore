@@ -27,3 +27,9 @@ replay_pid*
 .DS_Store
 .vscode
 node_modules/
+
+# Ignorar arquivos gerados pelo Vite
+src/main/resources/static/*
+!src/main/resources/static/.gitkeep
+
+target/

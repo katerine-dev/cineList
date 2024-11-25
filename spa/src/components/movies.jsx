@@ -1,5 +1,5 @@
 import { TrashIcon } from "lucide-react";
-import PropTypes from "prop-types";
+import { updateFilme } from "../../service/FilmeService";
 
 function Movies({
   movies,
@@ -7,6 +7,24 @@ function Movies({
   onDeleteMovieClick,
   onClearAllMovies,
 }) {
+
+  const onCompleteMovieClick = async (movieId) => {
+    try {
+      const updates = {
+        completedAt: new Date().toISOString(),
+        titulo: movies.find((movie) => movie.id === movieId)?.titulo,
+      };
+  
+      const updatedMovie = await updateFilme(movieId, updates);
+      console.log("Atualizar o filme com sucesso:", updatedMovie);
+  
+      onMovieClick(movieId);
+    } catch (error) {
+      console.error("Erro ao marcar um filme como assistido:", error);
+      alert("Erro ao marcar um filme como assistido. Por favor tente de novo.");
+    }
+  };
+
   return (
     <div
       className="border border-amber-500 rounded-md p-4"
@@ -24,15 +42,15 @@ function Movies({
           <li key={movie.id} className="flex gap-2">
             <button
               className="w-full text-left flex text-black bg-white p-2 rounded-md"
-              onClick={() => onMovieClick(movie.id)}
-              aria-label={`Marcar "${movie.title}" como assistido`}
+              onClick={() => onCompleteMovieClick(movie.id)}
+              aria-label={`Marcar "${movie.titulo}" como assistido`}
             >
-              {movie.title}
+              {movie.titulo}
             </button>
             <button
               onClick={() => onDeleteMovieClick(movie.id)}
               className="text-black bg-white p-2 rounded-md"
-              aria-label={`Remover "${movie.title}" da lista`}
+              aria-label={`Remover "${movie.titulo}" da lista`}
             >
               <TrashIcon aria-hidden="true" />
             </button>
@@ -49,13 +67,5 @@ function Movies({
     </div>
   );
 }
-
-// Validação de propriedades
-Movies.propTypes = {
-  movies: PropTypes.array.isRequired,
-  onMovieClick: PropTypes.func.isRequired,
-  onDeleteMovieClick: PropTypes.func.isRequired,
-  onClearAllMovies: PropTypes.func.isRequired,
-};
 
 export default Movies;

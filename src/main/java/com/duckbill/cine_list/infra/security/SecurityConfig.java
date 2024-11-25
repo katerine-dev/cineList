@@ -13,30 +13,46 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
-@EnableWebSecurity // Classe de configuração
+@EnableWebSecurity // Habilita a configuração de segurança
 public class SecurityConfig {
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
-
+    private final CustomUserDetailsService userDetailsService;
     @Autowired
-    private SecurityFilter securityFilter;
+    private final SecurityFilter securityFilter;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService, SecurityFilter securityFilter) {
+        this.userDetailsService = userDetailsService;
+        this.securityFilter = securityFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Desativa o CSRF (não é necessário em APIs stateless)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Define a política de sessão como stateless, não guarda o estado de login
+                .csrf(csrf -> csrf.disable()) // Desativa CSRF para APIs REST stateless
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Define sessões como stateless
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll() // Permite acesso aos endpoints do Swagger
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() // Permite o acesso ao endpoint de login sem autenticação
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll() // Permite o acesso ao endpoint de registro sem autenticação
-                        .requestMatchers(HttpMethod.GET, "/api/usuarios/user").hasAnyAuthority("ROLE_USER") // Permite acesso ao endpoint /user para usuários autenticados
-                        .anyRequest().authenticated() // Requer autenticação para todas as outras requisições
+                        // Permissões específicas para AuthController
+                        //.requestMatchers("/static/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/static/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+
+                                               // Permissões abertas para Swagger e documentação
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
+
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Adiciona o filtro de segurança antes do filtro padrão de autenticação
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Adiciona filtro de segurança
+
         return http.build();
     }
 

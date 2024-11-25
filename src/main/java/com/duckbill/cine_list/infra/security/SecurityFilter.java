@@ -1,9 +1,9 @@
 package com.duckbill.cine_list.infra.security;
 
-import com.duckbill.cine_list.db.entity.Usuario;
 import com.duckbill.cine_list.db.repository.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,10 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = this.recoverToken(request);
+
+
+        // Recupera e valida o token JWT
+        String token = this.recoverTokenFromCookie(request);
         String email = (token != null) ? tokenService.validateToken(token) : null;
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -36,20 +39,23 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
                 var authentication = new UsernamePasswordAuthenticationToken(usuario, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                // Adicione um print para verificar o contexto de autenticação
-                System.out.println("Autenticação configurada: " + SecurityContextHolder.getContext().getAuthentication());
             });
         }
 
+        // Continua a cadeia de filtros sem a verificação de rotas públicas
         filterChain.doFilter(request, response);
     }
 
-    // Metodo para extrair o token JWT do cabeçalho Authorization
-    private String recoverToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        return (authHeader != null && authHeader.startsWith("Bearer "))
-                ? authHeader.substring(7)
-                : null;
+    // Metodo para recuperar o token do cookie
+    private String recoverTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("authToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

@@ -8,4 +8,7 @@ import java.util.UUID;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     Optional<Usuario> findByEmail(String email);
+
+    // TODO: Busca um usuário pelo token de redefinição de senha
+    Optional<Usuario> findByPasswordResetToken(String token);
 }

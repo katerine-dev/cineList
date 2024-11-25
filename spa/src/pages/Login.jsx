@@ -1,40 +1,43 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
+import { login } from "../../service/AuthService";
 
-function Login({ onLoginSubmit }) {
+function Login() {
   const [email, setEmail] = useState("");
+  const [nome, setNome] = useState("");
   const [senha, setSenha] = useState("");
+  const [feedback, setFeedback] = useState("");
   const navigate = useNavigate();
 
   // Função chamada quando o login for realizado
-  const handleLogin = (event) => {
-    event.preventDefault(); // Impede o comportamento padrão do formulário
-
+  const handleLogin = async (event) => {
+    event.preventDefault();
     if (!email.trim() || !senha.trim()) {
-      return alert("Campos obrigatórios");
+      setFeedback("Campos obrigatórios!");
+      return;
     }
-
-    // Chama a função onLoginSubmit passando o email
-    onLoginSubmit(email);
-
-    // Limpa os campos após o login
-    setEmail("");
-    setSenha("");
-
-    // Navega para a página "home" após o login bem-sucedido
-    navigate(`/home?email=${email}`);
+    try {
+      const {emailUsuario, nomeUsuario} =  await login(email, senha);
+      setEmail(emailUsuario);
+      setNome(nomeUsuario);
+      // Caso o login seja bem-sucedido, redireciona para a página inicial
+      navigate(`/home?nome=${nomeUsuario}&email=${emailUsuario}`);
+      localStorage.setItem('nome', nome);
+      localStorage.setItem('email', email);
+    } catch (error) {
+      setFeedback("Erro ao fazer login: Verifique suas credenciais.");
+      console.error(error);
+    } 
+  };
+    const onRegisterButton = () => {
+    navigate("/registro");
   };
 
-  // Função para redirecionar para a página de registro
-  const onRegisterButton = () => {
-    navigate("/registro"); // Navega para a página de registro
-  };
 
-  // Função para redirecionar para a página de recuperação de senha
-  const onForgotPassword = () => {
-    navigate("/recuperar-senha"); // Navega para a página de recuperação de senha
-  };
+  // TODO:
+  // const onForgotPassword = () => {
+  //   navigate("/recuperar-senha");
+  // };
 
   return (
     <div className="w-full bg-black flex justify-center items-center flex-grow py-10">
@@ -79,6 +82,13 @@ function Login({ onLoginSubmit }) {
             Entrar
           </button>
 
+          {/* Mensagem de feedback */}
+          {feedback && (
+            <div className="text-sm text-red-500 mt-2" aria-live="polite">
+              {feedback}
+            </div>
+          )}
+
           <div className="flex gap-4 mt-4 justify-between">
             <button
               onClick={onRegisterButton}
@@ -88,23 +98,18 @@ function Login({ onLoginSubmit }) {
               Ainda não sou cadastrada/o
             </button>
 
-            <button
+            {/* <button
               type="button"
               onClick={onForgotPassword}
               className="text-sm text-amber-500 self-center"
             >
               Esqueci minha senha
-            </button>
+            </button> */}
           </div>
         </form>
       </div>
     </div>
   );
 }
-
-// Validação de Propriedades
-Login.propTypes = {
-  onLoginSubmit: PropTypes.func.isRequired,
-};
 
 export default Login;
