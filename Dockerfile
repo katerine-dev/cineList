@@ -27,6 +27,7 @@
     
     EXPOSE 8081
     
-    CMD ["sh", "-c", "java -Dserver.port=$$PORT -Dspring.profiles.active=prod -jar app.jar"]
+    CMD ["sh", "-c", "if [ -z \"$PORT\" ]; then PORT=8080; fi && java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar app.jar"]
+
 
     
