@@ -15,7 +15,7 @@
     # ----------------------------
     # Etapa 3: Executar a Aplicação
     # ----------------------------
-    FROM eclipse-temurin:21-jre
+    FROM openjdk:21-jre-slim
     
     WORKDIR /cineList
     
