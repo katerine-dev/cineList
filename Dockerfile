@@ -27,5 +27,6 @@
     
     EXPOSE 8081
     
-    CMD ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+    CMD ["java", "-Dserver.port=${PORT}", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+
     
