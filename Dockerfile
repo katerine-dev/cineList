@@ -27,5 +27,5 @@
     
     EXPOSE 8081
     
-    CMD ["java", "-jar", "target/cine-list-0.0.1-SNAPSHOT.jar", "-Dspring.profiles.active=prod"]
+    CMD ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
     
