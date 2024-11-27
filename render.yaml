@@ -3,19 +3,13 @@ services:
     name: cine-list-app
     runtime: docker
     plan: free
-    startCommand: ""
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: DB_HOST
-        sync: true
-      - key: DB_PORT
-        sync: true
-      - key: DB_NAME
-        sync: true
-      - key: DB_USER
+      - key: API_SECURITY_TOKEN_SECRET
         sync: true
       - key: DB_PASSWORD
         sync: true
-      - key: DB_SSL_MODE
+      - key: DB_URL
         sync: true
-      - key: API_SECURITY_TOKEN_SECRET
+      - key: DB_USERNAME
         sync: true

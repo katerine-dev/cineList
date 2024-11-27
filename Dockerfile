@@ -1,29 +1,30 @@
 # ----------------------------
-# Stage 1: Build Backend
+# Etapa 2: Construir o Backend
 # ----------------------------
-FROM maven:3.8.7-eclipse-temurin-17-alpine AS backend-builder
+    FROM maven:3.8.8-eclipse-temurin-21 AS backend-builder
 
-WORKDIR /app
-
-# Copia o código-fonte e arquivos de configuração para o container
-COPY pom.xml .
-COPY src ./src
-
-# Faz o download das dependências e compila a aplicação
-RUN mvn clean package -DskipTests
-
-# ----------------------------
-# Stage 2: Run Application
-# ----------------------------
-FROM eclipse-temurin:17-jdk-alpine
-
-WORKDIR /app
-
-# Copia o arquivo JAR gerado na etapa anterior para o container
-COPY --from=backend-builder /app/target/*.jar app.jar
-
-# Expor a porta padrão (ou a que você configurou no application.properties)
-EXPOSE 10000
-
-# Comando para rodar a aplicação
-CMD ["java", "-Dspring.profiles.active=prod", "-Dserver.port=10000", "-jar", "app.jar"]
+    WORKDIR /cineList/backend
+    
+    # Copia o código do backend
+    COPY pom.xml .
+    COPY src ./src
+    
+    # Constrói o backend
+    RUN mvn clean package -DskipTests
+    
+    # ----------------------------
+    # Etapa 3: Executar a Aplicação
+    # ----------------------------
+    FROM eclipse-temurin:21-jre
+    
+    WORKDIR /cineList
+    
+    # Copia o JAR gerado na etapa anterior
+    COPY --from=backend-builder /cineList/backend/target/*.jar app.jar
+    
+    # Exponha a porta usada pelo backend
+    EXPOSE 8081
+    
+    # Comando para executar a aplicação
+    CMD ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+    
