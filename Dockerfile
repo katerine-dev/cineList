@@ -26,4 +26,4 @@
     EXPOSE 8081
     
     # Comando para executar a aplicação
-    CMD ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+    CMD ["java", "-Dspring.profiles.active=prod", "-Dserver.port=8081", "-jar", "app.jar"]
