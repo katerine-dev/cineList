@@ -1,4 +1,18 @@
 # ----------------------------
+# Etapa 1: Construir o Frontend
+# ----------------------------
+    FROM node:20 AS frontend-builder
+
+    WORKDIR /app/spa
+    
+    # Copiar arquivos do frontend
+    COPY spa/package.json spa/package-lock.json ./
+    RUN npm install
+    
+    COPY frontend/ ./
+    RUN npm run build
+
+# ----------------------------
 # Etapa 1: Construir o Backend
 # ----------------------------
     FROM maven:3.8.8-eclipse-temurin-21 AS backend-builder
