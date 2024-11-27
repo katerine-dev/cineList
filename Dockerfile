@@ -1,9 +1,9 @@
 # ----------------------------
-# Etapa 2: Construir o Backend
+# Etapa 1: Construir o Backend
 # ----------------------------
     FROM maven:3.8.8-eclipse-temurin-21 AS backend-builder
 
-    WORKDIR /cineList/backend
+    WORKDIR /cineList
     
     # Copia o código do backend
     COPY pom.xml .
@@ -13,17 +13,18 @@
     RUN mvn clean package -DskipTests
     
     # ----------------------------
-    # Etapa 3: Executar a Aplicação
+    # Etapa 2: Executar a Aplicação
     # ----------------------------
     FROM eclipse-temurin:21-jre
     
     WORKDIR /cineList
     
     # Copia o JAR gerado na etapa anterior
-    COPY --from=backend-builder /cineList/backend/target/*.jar app.jar
+    COPY --from=backend-builder /cineList/target/cine-list-0.0.1-SNAPSHOT.jar app.jar
     
     # Exponha a porta usada pelo backend
     EXPOSE 8081
     
     # Comando para executar a aplicação
-    CMD ["java", "-Dspring.profiles.active=prod", "-Dserver.port=8081", "-jar", "app.jar"]
+    CMD ["java", "-Dspring.profiles.active=render", "-jar", "app.jar"]
+    
