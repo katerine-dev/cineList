@@ -3,7 +3,7 @@
 # ----------------------------
     FROM maven:3.8.8-eclipse-temurin-21 AS backend-builder
 
-    WORKDIR /cineList
+    WORKDIR /cineList/src
     
     # Copia o código do backend
     COPY pom.xml .
@@ -20,11 +20,11 @@
     WORKDIR /cineList
     
     # Copia o JAR gerado na etapa anterior
-    COPY --from=backend-builder /cineList/target/cine-list-0.0.1-SNAPSHOT.jar app.jar
+    COPY --from=backend-builder /cineList/scr/target/*.jar cine-list-0.0.1-SNAPSHOT.jar.jar
     
     # Exponha a porta usada pelo backend
     EXPOSE 8081
     
     # Comando para executar a aplicação
-    CMD ["java", "-Dspring.profiles.active=render", "-jar", "app.jar"]
+    CMD ["java", "-Dspring.profiles.active=render","-Dserver.port=8081", "-jar", "cine-list-0.0.1-SNAPSHOT.jar"]
     
