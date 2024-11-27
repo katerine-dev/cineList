@@ -1,47 +1,29 @@
 # ----------------------------
-# Etapa 1: Construir o Frontend
-# ----------------------------
-FROM node:18-alpine AS frontend-builder
-
-WORKDIR /app
-
-# Copia os arquivos do frontend
-COPY spa/package*.json ./
-COPY spa/ ./
-
-# Instala as dependências e constrói o frontend
-RUN npm install
-RUN npm run build
-
-# ----------------------------
-# Etapa 2: Construir o Backend
+# Stage 1: Build Backend
 # ----------------------------
 FROM maven:3.8.7-eclipse-temurin-17-alpine AS backend-builder
 
 WORKDIR /app
 
-# Copia os arquivos do backend
+# Copia o código-fonte e arquivos de configuração para o container
 COPY pom.xml .
 COPY src ./src
 
-# Copia o build do frontend para o diretório de recursos estáticos do backend
-COPY --from=frontend-builder /app/dist ./src/main/resources/static
-
-# Compila o backend
+# Faz o download das dependências e compila a aplicação
 RUN mvn clean package -DskipTests
 
 # ----------------------------
-# Etapa 3: Imagem Final
+# Stage 2: Run Application
 # ----------------------------
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
-# Copia o JAR gerado para a imagem final
+# Copia o arquivo JAR gerado na etapa anterior para o container
 COPY --from=backend-builder /app/target/*.jar app.jar
 
-# Porta que a aplicação irá expor
-EXPOSE 8081
+# Expor a porta padrão (ou a que você configurou no application.properties)
+EXPOSE 10000
 
-# Comando para executar a aplicação
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Comando para rodar a aplicação
+CMD ["java", "-Dspring.profiles.active=prod", "-Dserver.port=10000", "-jar", "app.jar"]

@@ -3,7 +3,7 @@ services:
     name: cine-list-app
     runtime: docker
     plan: free
-    startCommand: "java -Dspring.profiles.active=prod -Dserver.port=10000 -jar app.jar"
+    startCommand: ""
     envVars:
       - key: DB_HOST
         sync: true
