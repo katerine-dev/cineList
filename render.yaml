@@ -1,9 +1,9 @@
 services:
   - type: web
     name: cine-list-app
-    env: docker
+    runtime: docker
     plan: free
-    dockerfilePath: ./Dockerfile
+    startCommand: "java -Dspring.profiles.active=prod -Dserver.port=10000 -jar app.jar"
     envVars:
       - key: DB_HOST
         sync: true
@@ -15,10 +15,7 @@ services:
         sync: true
       - key: DB_PASSWORD
         sync: true
+      - key: DB_SSL_MODE
+        sync: true
       - key: JAVA_OPTS
-        value: "-Dspring.profiles.active=prod -Dserver.port=10000"
-        sync: false
-    routes:
-      - type: rewrite
-        source: /.*
-        destination: /index.html
+        sync: true
