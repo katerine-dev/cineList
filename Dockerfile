@@ -15,7 +15,7 @@
     # ----------------------------
     # Etapa 3: Executar a Aplicação
     # ----------------------------
-    FROM openjdk:21-jre-slim
+    FROM eclipse-temurin:21-jre
     
     WORKDIR /cineList
     
@@ -27,4 +27,3 @@
     
     # Comando para executar a aplicação
     CMD ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
-    

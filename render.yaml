@@ -4,6 +4,7 @@ services:
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
+    startCommand: ""
     envVars:
       - key: API_SECURITY_TOKEN_SECRET
         sync: true
