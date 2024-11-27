@@ -3,9 +3,9 @@
 # ----------------------------
     FROM maven:3.8.8-eclipse-temurin-21 AS backend-builder
 
-    WORKDIR /cineList/src
+    WORKDIR /app
     
-    # Copia o código do backend
+    # Copia os arquivos do backend
     COPY pom.xml .
     COPY src ./src
     
@@ -17,14 +17,15 @@
     # ----------------------------
     FROM eclipse-temurin:21-jre
     
-    WORKDIR /cineList
+    WORKDIR /app
     
-    # Copia o JAR gerado na etapa anterior
-    COPY --from=backend-builder /cineList/scr/target/*.jar cine-list-0.0.1-SNAPSHOT.jar.jar
+    # Comando para verificar a versão do Java (apenas para debug temporário)
+    RUN java -version
     
-    # Exponha a porta usada pelo backend
+    # Copia o JAR gerado
+    COPY --from=backend-builder /app/target/*.jar app.jar
+    
     EXPOSE 8081
     
-    # Comando para executar a aplicação
-    CMD ["java", "-Dspring.profiles.active=render","-Dserver.port=8081", "-jar", "cine-list-0.0.1-SNAPSHOT.jar"]
+    CMD ["java", "-jar", "target/cine-list-0.0.1-SNAPSHOT.jar", "-Dspring.profiles.active=prod"]
     
