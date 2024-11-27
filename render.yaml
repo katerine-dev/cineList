@@ -17,5 +17,5 @@ services:
         sync: true
       - key: DB_SSL_MODE
         sync: true
-      - key: JAVA_OPTS
+      - key: API_SECURITY_TOKEN_SECRET
         sync: true
