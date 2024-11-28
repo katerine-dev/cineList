@@ -5,6 +5,18 @@ atualizem, visualizem e removam filmes de suas listas. O sistema foi desenvolvid
 Java e Spring Boot no backend e React no frontend, com um banco de dados MySQL. A interface inicial é oferecida através 
 de uma API documentada via Swagger.
 
+## Objetivos
+Desenvolver uma aplicação web responsiva para gerenciar listas de filmes, permitindo aos usuários adicionar, editar e avaliar filmes com recursos personalizados, como notas e comentários.
+
+## Pesquisa de Usuário
+Identificou-se a necessidade de personalização, navegação simples e acessibilidade, garantindo compatibilidade com leitores de tela e design adequado para diferentes dispositivos e inclusivo.
+
+## Análise de Requisitos
+Funcionalidades principais: gerenciamento de listas, avaliação com estrelas e campos de comentários.
+Design e navegação: interface adaptável e fluida com React e React Router.
+Integração: suporte a APIs REST para manter os dados sincronizados com o banco de dados.
+Esse planejamento focou na criação de um produto inclusivo, funcional e alinhado às expectativas dos usuários.
+
 ## Desenvolvimento (Backend)
 
 O desenvolvimento do CineList foi realizado seguindo os princípios da programação orientada a objetos e de boas práticas 
