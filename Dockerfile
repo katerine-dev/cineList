@@ -1,50 +1,47 @@
 # ----------------------------
-# Etapa 1: Construir o Frontend
+# Step 1: Build the Frontend
 # ----------------------------
     FROM node:20 AS frontend-builder
 
     WORKDIR /app/spa
     
-    # Copiar arquivos do frontend
+    # Copy frontend package files
     COPY spa/package.json spa/package-lock.json ./
     RUN npm install
     
-    COPY frontend/ ./
+    COPY spa/ ./
     RUN npm run build
-
-# ----------------------------
-# Etapa 1: Construir o Backend
-# ----------------------------
+    
+    # ----------------------------
+    # Step 2: Build the Backend
+    # ----------------------------
     FROM maven:3.8.8-eclipse-temurin-21 AS backend-builder
-
+    
     WORKDIR /app
     
-    # Copia os arquivos do backend
+    # Copy backend pom.xml
     COPY pom.xml .
+    
+    # Copy backend source code
     COPY src ./src
     
-    # Constrói o backend
+    # Copy built frontend assets into backend resources
+    COPY --from=frontend-builder /app/spa/dist/ ./src/main/resources/static/
+    
+    # Build the backend
     RUN mvn clean package -DskipTests
     
     # ----------------------------
-    # Etapa 2: Executar a Aplicação
+    # Step 3: Run the Application
     # ----------------------------
     FROM eclipse-temurin:21-jre
     
     WORKDIR /app
     
-    # Comando para verificar a versão do Java (apenas para debug temporário)
-    RUN java -version
-    
-    # Copia o JAR gerado
+    # Copy the generated JAR
     COPY --from=backend-builder /app/target/*.jar app.jar
     
-    EXPOSE 8081
+    EXPOSE 8080
     
-    CMD ["sh", "-c", "java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar app.jar"]
-
-
-
-
-
+    CMD ["java", "-Dserver.port=${PORT}", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
     
