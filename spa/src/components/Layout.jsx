@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "./../../public/assets/cinelist.png";
 
 function Layout({ children }) {
   return (
@@ -6,7 +7,7 @@ function Layout({ children }) {
       {/* Imagem Fixa */}
       <div className="bg-black flex justify-center items-center py-4 mt-0">
         <img
-          src="/static/assets/cinelist.png"
+          src={logo}
           alt="CineList Logo"
           className="w-[800px] h-auto"
         />
